@@ -2,36 +2,32 @@
 
 using namespace std;
 
-void solve()
-{
+void solve() {
     int n, d;
+    while (cin >> n >> d && (n != 0 || d != 0)) {
+        string numero;
+        cin >> numero;
 
-    while (cin >> n >> d && (n+d))
-    {
-        int t = -1;
-        char stack[n + 1];
-
-        for (int i = 0; i < n; i++)
-        {
-            char c;
-            cin >> c;
-
-            while(t > -1 && d > 0 && c > stack[t])
-            {
-                t--;
+        string resultado = "";
+        
+        for (char digito : numero) {
+            while (!resultado.empty() && d > 0 && digito > resultado.back()) {
+                resultado.pop_back();
                 d--;
             }
-
-            stack[++t] = c;
+            resultado.push_back(digito);
         }
 
-        stack[++t] = '\0';
-        cout << stack << endl;
+        while (d > 0) {
+            resultado.pop_back();
+            d--;
+        }
+
+        cout << resultado << endl;
     }
 }
 
-int main()
-{
+int main() {
     solve();
     return 0;
 }

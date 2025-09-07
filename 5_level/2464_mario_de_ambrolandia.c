@@ -1,17 +1,22 @@
 #include <stdio.h>
 #include <limits.h>
 
-int check(int map[], int n, int pulo)
+int check(int map[], int n, int pulo, int init)
 {
-    for (int i = 0; i < n; i++)
+    for (int i = init + pulo + 1; i < n; i += pulo + 1)
     {
         if (map[i])
         {
-            i = i + pulo;
+            return 0;
         }
 
-        if (i < n && map[i])
-            return 0;
+        if (i + pulo + 1 < n && map[i + pulo + 1])
+        {
+            while(i < n && map[i] == 0)
+                i++;
+            
+            i--;
+        }
     }
 
     return 1;
@@ -19,27 +24,18 @@ int check(int map[], int n, int pulo)
 
 int min_pulo(int array[], int n)
 {
-    int max = INT_MIN;
-
-    for (int i = 0; i < n; i++)
+    for (int i = 1; i < n; i++)
     {
-        if (array[i])
+        for (int j = 0; j < n && array[j] == 0; j++)
         {
-            int count = 1;
-            i++;
-
-            while (i < n && array[i])
+            if (check(array, n, i, j))
             {
-                count++;
-                i++;
+                return i;
             }
-
-            if (max < count)
-                max = count;
         }
     }
 
-    return max;
+    return -1;
 }
 
 int main()
@@ -71,41 +67,5 @@ int main()
 
     int min = min_pulo(map, max + 2);
 
-    if (min != 1)
-    {
-
-        if (check(map, max + 1, min))
-        {
-            printf("Pulo minimo: %d\n", min);
-        }
-        else
-        {
-            int pulo;
-            for (pulo = min; pulo < max + 1; pulo++)
-            {
-                int i;
-                for (i = 0; i < max + 2 && !map[i]; i++)
-                {
-                    int pular = 0;
-
-                    for (int j = i; i + pulo <= max + 1 && j < i + pulo && !pular; j++)
-                        if (map[j])
-                            pular = 1;
-
-                    if (pular)
-                        i = i + pulo;
-                }
-
-                printf("i = %d e pulo = %d\n", i, pulo);
-                if (i > max + 1)
-                    break;
-            }
-
-            printf("Pulo minimo: %d\n", pulo);
-        }
-    }
-    else
-    {
-        printf("Pulo minimo: %d\n", min);
-    }
+    printf("Pulo minimo: %d\n", min);
 }
